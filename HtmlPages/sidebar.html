@@ -1,0 +1,166 @@
+<!--sidebar HTML for load-->
+<!--
+<div class="sidebar-inner slimscroll">
+  <form action="search.html" class="mobile-view">
+      <input class="form-control" type="text" placeholder="Search here">
+      <button class="btn" type="button"><i class="fa fa-search"></i></button>
+  </form>
+-->
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto Sans TC">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto Sans Mono">
+ 
+  <div id="sidebar-menu" class="sidebar-menu">
+
+    <a id="未登錄資料Title" style="margin-left:20px; margin-top:0px; padding-top:0px; color:white; font-size:16px; font-weight:bold"></a>
+    <button class="確定登錄按鈕" onClick="登錄所有紀錄()">登錄所有紀錄</button>
+    
+    <a id="檢查是否有新資料" style="color:white; float:right; margin-right:10px; margin-top:5px;">每5秒檢查新資料</a><br>
+
+
+<!--    <nav style="color:white;margin-left:20px; margin-right:10px; height:703px; overflow:hidden;overflow-y:scroll;;border-style:solid;border-color:#FFAC55">       -->
+    <nav style="color:white;margin-left:20px; margin-right:10px; width:420px; height:500px; overflow:hidden;overflow-y:scroll;;border-style:solid;border-color:#FFAC55">       
+      <ul id="未登錄記錄表" style="padding:10px">
+      </ul>          
+    </nav>
+    <br>
+    <a style="color:white; margin-left:20px;">已登錄記錄</a>
+    <button class="確定登錄按鈕" onClick="清除已登錄記錄()">清除紀錄</button>
+    <a style="color:white; float:right; margin-right:10px;">登出後，紀錄自動清除</a>
+    <nav style="color:white;margin-left:20px; margin-right:10px; height:203px; overflow:hidden;overflow-y:scroll;;border-style:solid;border-color:#FFAC55">       
+      <ul id="已登錄記錄" style="padding:10px">
+      </ul>          
+    </nav>   
+   
+    <a style="color:white; margin-left:20px; margin-top:10px">最佳使用解析度: 1920 x 1080</a>
+
+  </div>
+  <script>
+    var recNo=1;
+    
+    // 模擬資料，不再使用
+    var names=['龔X萱','吳X伯','王X佑','洪X銘','許X伶','張X青','張X富','劉X禮','林X豪','連X翰',
+               '李X揚','梁X嘉','趙X如','莊X貴','王X哲','陳X剛','陳X孜','王X芸','謝X鴻','蔡X一',
+               '張X霖','羅X冰','蘇X鈞','胡X倩','盧X聖','林X聖','林X菁','柳X倫','林X佳','陳X婷',
+               '劉X穎','張X皓','林X佩','毛X婷','劉X軒','吳X雲','楊X帆','曾X云','杜X然','黃X平',
+               '劉X剛','朱X苓','林X人','陳X瑋','陳X弘','黃X映','張X南','李X秀','郭X良','詹X貞',
+               '鄭X斌','蕭X惠','賴X伯','鄭X德','林X音','林X偉','陳X珠','蘇X軒','邱X云','林X宏',
+               '陳X婷','王X傑','陳X羽','吳X軒','黃X銘','劉X火','連X桂','吳X來','曾X惠','丁X梅',
+               '張X源','何X倩','何X倫','余X倫','宋X純','曾X娟','陸X容','黃X蓮','王X育','賴X啟',
+               '陳X意','朱X琳','林X夫','袁X穎','阮X傑','李X宇','林X君','林X易','黃X榮','王X香',
+               '邱X文','曹X豪','許X昀','王X瑞','林X軒','林X伶','林X淳','楊X貞','陳X祥','王X玲'];
+    
+    // 模擬資料，不再使用
+    function 新增測試資料(){
+      var pickAname = names[Math.floor(Math.random()*100)];
+      var rndWeight = (Math.random()*2 +2.5).toString().substr(0,4);
+      var rndHeight = (Math.random()*40 +40).toString().substr(0,4);
+      var rndBMI    = rndWeight/((rndHeight/100)*(rndHeight/100));
+      var rndBMIStr = (Math.floor(rndBMI*100)/100).toString();
+      var recNoStr  = recNo.toString();
+      var now       = new Date(Date.now());
+      var nowStr    = now.toLocaleString().substr(5,20);      
+      //console.log(pickAname, rndWeight);
+      var prependHtml =     
+        '<div style="margin-top:10px" id=' + '"rec' + recNoStr + '"><button class="確定登錄按鈕' + 
+        '" id="rb' + recNoStr + '" onClick="確定登錄按鈕('+ recNoStr +')" >確定登錄</button>' +
+        '<span style="font-family:Noto Sans TC; font-size:18px; margin-left:0px">' + pickAname +
+        '<span style="font-family:Noto Sans Mono; font-size:18px"> '+ nowStr+ ' </span>' + 
+          
+        '</span>' + '<br><span style="font-family:Noto Sans Mono; font-size:14px; margin-left:0px">' + 
+        ' 體重:' + rndWeight + '公斤, 身高:' + rndHeight + '公分, BMI:' + rndBMIStr + ' </span>'+
+        '</div>';      
+      
+      recNo++;
+      
+      console.log(prependHtml);
+      
+      $("#未登錄記錄表").prepend(prependHtml);
+      
+    } 
+              
+    async function 確定登錄按鈕(id){
+      console.log(typeof id, id);
+      
+      if (equip_type=="hwBMI") {
+        var recToBeDeleted=未登錄資料hwBMI[id];
+
+        var 刪除紀錄ID名 = (會員資料hwBMI[recToBeDeleted.id]==undefined)?recToBeDeleted.id:會員資料hwBMI[recToBeDeleted.id].名字;
+
+        var checkInfo = '<div style="font-size:16px">'+
+                        recToBeDeleted.measure_time+' '+刪除紀錄ID名+' 已被登錄'+
+                        '<br></div>';
+
+
+        await 刪除一筆未登錄量測記錄hwBMI(id);
+
+        新增未登錄資料hwBMI();
+      }
+      
+      if (equip_type=="dyno") {
+        var recToBeDeleted=未登錄資料Dyno[id];
+
+        var 刪除紀錄ID名 = (會員資料dyno[recToBeDeleted.id]==undefined)?recToBeDeleted.id:會員資料dyno[recToBeDeleted.id].名字;
+        
+        var iso_tmp=(new Date(recToBeDeleted.measure_time+8*60*60*1000)).toISOString();
+        var time_tmp=iso_tmp.replace('T', ' ');   
+
+        var checkInfo = '<div style="font-size:16px">'+
+                        time_tmp.substr(0,19)+' '+刪除紀錄ID名+' 量測記錄已被登錄'+
+                        '<br></div>';
+
+
+        await 刪除一筆未登錄量測記錄dyno(id);
+
+        新增未登錄資料Dyno();
+      }      
+      
+      checkInfoHtml = checkInfo + checkInfoHtml;
+      $("#已登錄記錄").html(checkInfoHtml);          
+
+    }
+
+    // API=13 刪除一筆未登錄量測記錄hwBMI
+    // for test: http://localhost:5000/?API=13&Unit=金機興業&Key=sn_timestamp
+    async function 刪除一筆未登錄量測記錄hwBMI(keyStr) {
+      apiUrl = apiUrlBase+"?API=13&Unit="+客戶名稱+"&Key="+keyStr;
+      //console.log(apiUrl);
+      await fetch(apiUrl)
+      .then(function(response) {
+        return(response.text());
+      })
+      .then(function(result) {        
+        //console.log(result);
+      });  
+
+      //return(未登錄資料hwBMI);
+    }
+    
+
+    // API=16 刪除一筆未登錄量測記錄hwBMI
+    // for test: http://localhost:5000/?API=16&Unit=金機興業&Key=sn_timestamp
+    async function 刪除一筆未登錄量測記錄dyno(keyStr) {
+      apiUrl = apiUrlBase+"?API=16&Unit="+客戶名稱+"&Key="+keyStr;
+      //console.log(apiUrl);
+      await fetch(apiUrl)
+      .then(function(response) {
+        return(response.text());
+      })
+      .then(function(result) {        
+        //console.log(result);
+      });  
+
+    }
+      
+    function 清除已登錄記錄() {
+      checkInfoHtml = "";
+      $("#已登錄記錄").html(checkInfoHtml);       
+    }
+    
+    function 登錄所有紀錄(){
+      var newRecKeys=Object.keys(未登錄資料hwBMI);
+      for (var i=1; i<newRecKeys.length;i++) 確定登錄按鈕(newRecKeys[i]);
+    }
+    
+  </script>
+<!--</div>-->

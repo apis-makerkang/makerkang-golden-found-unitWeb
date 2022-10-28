@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script> 
+      var 版本="v1.6";
+      
+      // login
+      var loginUnit="";
+      var loginPwd="";
+      // Configuratiion
+      var experimental=false;
+      var local_api = false;
+      
+      if (local_api) {
+        var apiUrlBase = "http://localhost:5000/";
+      } else {
+        var apiUrlBase = "https://golden-found-api.herokuapp.com/";
+      }
+
+      console.log(版本);   
+      console.log(apiUrlBase);   
+      
+    </script>
+         
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <meta name="description" content="量測記錄管理系統">
+    <meta name="keywords" content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, accounts, invoice, html5, responsive, CRM, Projects">
+    <meta name="author" content="">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="format-detection" content="telephone=no">
+    <title>量測記錄管理系統</title>
+
+    <!-- Favicon -->
+<!--    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">-->
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+
+    <!--font style-->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Lineawesome CSS -->
+    <link rel="stylesheet" href="assets/css/line-awesome.min.css">
+
+    <!-- Select2 CSS -->
+    <link rel="stylesheet" href="assets/css/select2.min.css">
+
+    <!-- Datetimepicker CSS -->
+    <link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.min.css">
+
+    <!-- Datatable CSS -->
+    <link rel="stylesheet" href="assets/css/dataTables.bootstrap4.min.css">
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="assets/css/theme-settings.css">
+
+    <!-- Loading CSS -->
+    <link rel="stylesheet" href="assets/css/loading.css" />
+    
+    <!-- View BigImg-->
+    <link rel="stylesheet" href="./view-bigimg.css">
+    <script src="./view-bigimgMy.js"></script>    
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- My CSS -->
+    <link rel="stylesheet" href="assets/css/myCss.css">
+  </head>
+   
+    <body id="skin-color" class="inter">
+      
+      <!-- Main Wrapper -->
+      <div class="main-wrapper">
+
+        <!-- Header -->
+        <div class="header" id="heading">
+        <!--Move to heading.html, loaded by JS-->
+        </div>
+        <!-- /Header -->
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar" style="display:none">
+          <!-- Move to sidebar.html, loaded by JS-->           
+        </div>
+        <!-- /Sidebar -->
+
+        <!-- Page Wrapper - login page-->
+        <div class="page-wrapper" id="login-page" style="margin-left:450px;">
+
+          <!-- Page Content -->               
+          <div class="content container-fluid">
+
+             <!-- Content Starts -->
+              <div class="login_form">
+                <span style="font-size:20px;font-weight:bold">為獲得最佳使用體驗，請使用 Chrome 瀏覽器</span>
+                <form class="" autocomplete="off">
+                  <input placeholder="名字" type="text" id="username" value="admin">
+                  <input placeholder="密碼" type="password" id="password">
+                  <button onClick="login()" id="login_button">Login</button>
+                </form>
+              </div>            
+            </div>        
+            <!-- /Content End -->
+          <!-- /Page Content -->
+        </div>
+        <!-- /Page Wrapper -->		
+                     
+
+        <!-- Page Wrapper -->
+        <div class="page-wrapper" id="body-report-page" style="margin-left:450px; display:none">
+
+          <!-- Page Content -->               
+          <div class="content container-fluid">
+
+            <div style="margin-top: -20px">
+             
+              <div id="更新section" style="display:none">
+                <button id="更新資料" style="position:absolute; top:70px; left:-408px" class="btn-gradient-primary font-weight-bold" onclick="updateReports()" >
+                  <span id="ml-更新資料">更新資料 </span>
+                </button>             
+                <label id="更新資料筆數" style="position:absolute; top:80px; left:-320px;">有新量測資料，請點擊 更新資料 按鈕進行更新</label> 
+              </div>                          
+
+              <button style="position:absolute; top:70px; left:200px" class="btn-gradient-primary font-weight-bold" onclick="prevReport()" >
+                <span id="ml-身體組成前一筆">前一筆</span>
+              </button>             
+              <label id="LTinfo" style="position:absolute; top:65px; left:270px;"></label> 
+
+              <button style="position:absolute; top:70px; left:1158px" class="btn-gradient-primary font-weight-bold" onclick="nextReport()" >
+                <span id="ml-身體組成下一筆">下一筆</span>
+              </button>
+              
+              <label id="RTinfo" style="position:absolute; top:65px; left:720px;"></label>               
+            </div>
+
+            <!-- Page Header -->
+
+            <!-- Content Starts -->
+            <div style="position:absolute; top:120px;left:-430px; width:600px ">
+            <div id="有報告總人數" style="margin-top:-35px; float:right; margin-right:5px; font-weight:bold; font-size:20px"></div>
+            <div id="身體組成紀錄表" class="row">
+              <div class="col-md-12">
+                <div class="card mb-0">
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table id="身體組成紀錄" class="table table-striped table-nowrap custom-table mb-0" style="width:100%">
+                        <thead>
+                          <tr>
+                            <th id="ml-量測日期">量測日期</th>
+                            <th id="ml-姓名">姓名</th>
+                            <th id="ml-電話">電話</th>
+                            <th id="ml-健康分數">分數</th>                
+                            <th id="ml-查看報告"></th>
+                         </tr>
+                        </thead>
+                      </table>
+                    </div>
+                  </div>
+                </div>		
+              </div>
+            </div>
+            </div>
+                        
+            <div id="wrap">                              
+              <img id="LL" style="width:500px;position:absolute; top:120px;left:-300px; display:none" src="./noPrev.jpg"/ alt="image">
+              <img id="LT" style="width:500px;position:absolute; top:120px;left:200px; z-index:0" src="./blank.jpg"/ alt="此報告無法顯示圖片">
+              <img id="RT" style="width:500px;position:absolute; top:120px;left:720px; z-index:0" src="./noNext.jpg"/ alt="此報告無法顯示圖片">
+              <img id="RR" style="width:500px;position:absolute; top:120px;left:1220px; display:none" src="./noNext.jpg"/ alt="image">              
+            </div>        
+            <!-- /Content End -->
+          </div>
+          <!-- /Page Content -->
+        </div>
+        <!-- /Page Wrapper -->		
+                                          
+        <!-- Page Wrapper -->
+        <div class="page-wrapper" id="membership-page" style="margin-left:450px; display:none">
+
+          <!-- Page Content -->                                       
+          <div class="content container-fluid" style="margin-left:0px; width:600px">         
+            <div class="crms-title row bg-white" >
+              <div class="col ">
+                <h3 class="page-title m-0">
+                  <span class="page-title-icon bg-gradient-primary text-white ">
+                    <i class="fa fa-user-o" aria-hidden="true"></i>
+                  </span>
+                  <span id="ml-hwBMI會員標題"> 會員資料 </span>
+                  <button id="手動刷新會員" style="font-size:14px; background-color:#FF4350; color:white; border-width:0px; border-radius:5px; padding-top:5px" onclick="手動刷新會員()">刷新會員</button>
+                  
+                  <span id="新增修改會員按鈕" style="float:right;margin-top:5px">
+                    <button onClick="show_add_member_form()" style="border:none;background-color: transparent">
+                      <i class="fa fa-plus" style="color:royalblue"> 新增/修改會員</i>                      
+                    </button>
+                  </span>
+                </h3>
+              </div>
+            </div>
+
+            <!-- Content Starts -->            
+            <div id="hwBMI會員資料表" class="row">
+              <div class="col-md-12">
+                <div class="card mb-0">
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table id="身高體重BMI會員" class="table table-striped table-nowrap custom-table mb-0" style="width:100%">
+                        <thead>
+                          <tr>
+                            <th id="ml-ID">ID</th>
+                            <th id="ml-姓名">姓名</th>
+<!--
+                            <th id="ml-性別">性別</th>
+                            <th id="ml-父母">父母</th>
+-->
+                            <th id="ml-電話">電話</th>
+<!--                            <th id="ml-備註說明">備註說明</th>                -->
+<!--                            <th id="ml-量測記錄"></th>-->
+                            <th id="ml-完成登錄"></th>
+                         </tr>
+                        </thead>
+                      </table>
+                    </div>
+                  </div>
+                </div>		
+              </div>
+            </div>
+            <!-- /Content End -->
+          </div>
+          
+          <div id = "add_member_form" class="add_member_form" style="display:none">
+            <h2 style="font-size:20px;font-weight:bold">新增/修改會員</h2>
+            <div id="自動序號section">
+              <button onclick="ID自動續號()" style="font-size:14px; background-color:#FF4350; color:white; border-width:0px; border-radius:5px; padding:2px;width:80px;height:22px; float:right; margin-top:-43px" >ID 自動續號 </button>
+              <div id="最後ID" style="float:right; font-size:14px; margin-top:-41px; margin-right:90px">-------</div>
+              <input id="ID前綴" maxlength="3" style="float:right; font-size:14px; margin-top:-42px; margin-right:155px; width: 60px;height: 22px"/>
+              <div style="float:right; font-size:14px; margin-top:-41px; margin-right:220px">最後ID:</div>   
+            </div>
+            <div class="" autocomplete="off">
+              ID: <input placeholder="請輸入 ID，或點擊 ID 自動續號" type="text" id="new_member_id" >
+              名字: <input type="text" id="new_member_name">
+              電話號碼: <input type="text" id="new_member_phone">
+              <button onClick="add_member()" >新增 / 修改 會員</button>
+              <button onClick="hide_add_member_form()" style="background-color:lightgray; color:white; margin-top:20px">取消</button>
+            </div>
+          </div>
+                        
+          <!-- /Page Content -->
+        </div>
+        <!-- /Page Wrapper -->
+       
+        <!-- Page Wrapper -->        
+        <div class="page-wrapper" id="measurements-page" style="margin-left:450px; display:none">
+
+          <!-- Page Content -->               
+          <div class="content container-fluid" style="margin-left:0px; width:600px">         
+            <div class="crms-title row bg-white" >
+              <div class="col ">
+                <h3 class="page-title m-0">
+                  <span class="page-title-icon bg-gradient-primary text-white ">
+                    <i class="fa fa-user-o" aria-hidden="true"></i>
+                  </span>
+                  <span id="ml-量測紀錄標題"> 量測記錄 </span>
+                  <span style="float:right;margin-top:5px">
+                    <button onClick="show會員資料表()" style="border:none;background-color: transparent">
+                      <i class="fa fa-times" style=""> 回到會員表</i>                      
+                    </button>
+                  </span>
+                </h3>
+              </div>
+            </div>
+
+            <!-- Content Starts -->            
+            <div id="量測記錄表" class="row">
+              <div class="col-md-12">
+                <div class="card mb-0">
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table id="身高體重BM量測記錄表" class="table table-striped table-nowrap custom-table mb-0" style="width:100%">
+                        <thead>
+                          <tr>
+                            <th id="ml-量測時間">量測時間</th>
+                            <th id="ml-體重">體重</th>
+                            <th id="ml-身高">身高</th>
+                            <th id="ml-BMI">BMI</th>
+                            <th id="ml-查看紀錄"></th>
+                         </tr>
+                        </thead>
+                      </table>
+                    </div>
+                  </div>
+                </div>		
+              </div>
+            </div>
+            <!-- /Content End -->
+          </div>
+          
+          
+<!--          <div class="content container-fluid" style="margin-left:1050px; width:600px">  -->
+          <div style="position:absolute; left:600px; top:65px; width:600px; text-align: center"> 
+            <div id="chartDiv">            
+              <div id="dateRangeButtons">
+                <!-- // $("#週按鈕").removeClass('selectedBtn').addClass('unselectedBtn');-->
+                <button id="週按鈕" class="selectedBtn" onclick="displayChartsInWeek()">日</button>
+                <button id="月按鈕" class="unselectedBtn" onclick="displayChartsInMonth()">週</button>
+                <button id="全部按鈕" class="unselectedBtn" onclick="displayChartsInAll()">全部</button>
+              </div>
+                       
+              <!-- <img id="hwBMI_blank" src="./blank.jpg" style="width:500px; margin-top:10px"><br> -->
+              <div id="charts" style="display:none">
+                <label id="chart_range" style="margin-top:10px; font-size:20px">日期時間</label><br>
+
+                <!-- 
+                <div style="float:left">
+                  <a id="left-arrow" style="font-size: 48px; color:#FF4350; float:left; margin-left:10px; margin-top:-60px" onclick="chartMovePrev()"><i class="fa fa-caret-left" aria-hidden="true"></i></a> 
+                </div>
+
+                <div style="float:right">            
+                  <a id="right-arrow" style="font-size: 48px; color:#FF4350; float:right;margin-right:10px; margin-top:-60px" onclick="chartMoveNext()"><i class="fa fa-caret-right" aria-hidden="true"></i></a> 
+                </div>
+                -->
+
+                <canvas id="myChart1" width="600px" height="200px" style="margin-top:5px"></canvas>   
+
+                <canvas id="myChart2" width="600px" height="200px" style="margin-top:10px"></canvas>   
+
+                <canvas id="myChart3" width="600px" height="200px" style="margin-top:10px"></canvas> 
+                                                       
+              </div>                  
+            </div>
+          </div>
+
+                                
+          <!-- /Page Content -->
+        </div>        
+        <!-- /Page Wrapper -->  
+               
+        <!-- Page Wrapper 沒被使用，留作參考-->
+        <div class="page-wrapper" id="expire-page" style="display:none">
+
+          <!-- Page Content -->               
+          <div class="content container-fluid">
+
+            <div class="crms-title row bg-white">
+              <div class="col ">
+                <h3 class="page-title m-0">
+                  <span class="page-title-icon bg-gradient-primary text-white ">
+                    <i class="fa fa-bell-o" aria-hidden="true"></i>
+                  </span>
+                  <span id="ml-檢查即將到期合約"> 檢查即將到期合約 </span>
+                </h3>
+              </div>
+            </div>
+
+            <div style="margin: 10px">
+              <span style="margin-left:0px" id ="ml-開始日期">  開始日期 </span> 
+              <input id="expQueryStartDate" type='date' />
+              
+              <span style="margin-left:30px" id ="ml-結束日期"> 結束日期 </span> 
+              <input id="expQueryEndDate"   type='date' />
+              
+              <button style="margin-left:30px" class="btn-gradient-primary font-weight-bold" onclick="checkExpirations()" >
+                <span id="ml-檢查">檢 查</span>
+              </button>
+            </div>
+
+            <!-- Page Header -->
+
+            <!-- Content Starts -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card mb-0">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="expirations" class="table table-striped table-nowrap custom-table mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th id="ml-店鋪名稱">店鋪名稱</th>												
+                                            <th id="ml-客戶名字">客戶名字</th>
+                                            <th id="ml-合約編號">合約編號</th>
+                                            <th id="ml-課程種類">課程種類</th>
+                                            <th id="ml-合約狀態">合約狀態</th>
+                                            <th id="ml-合約到期日期">合約到期日期</th>
+                                            <th id="ml-延展到期日期">延展到期日期</th>
+                                            <th id="ml-第一次上課時間">第一次上課時間</th>
+                                            <th id="ml-負責教練">負責教練</th>										
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>		
+                </div>
+            </div>
+            <!-- /Content End -->
+
+          </div>
+          <!-- /Page Content -->
+
+        </div>
+        <!-- /Page Wrapper -->		
+				
+
+      </div>
+      <!-- /Main Wrapper -->
+
+      <!-- jQuery -->
+      <script src="assets/js/jquery-3.5.0.min.js"></script>
+
+      <!-- Bootstrap Core JS -->
+      <script src="assets/js/popper.min.js"></script>
+      <script src="assets/js/bootstrap.min.js"></script>
+
+      <!-- Slimscroll JS -->
+      <script src="assets/js/jquery.slimscroll.min.js"></script>
+
+      <script src="assets/js/select2.min.js"></script>
+
+      <!-- Datatable JS -->
+      <script src="assets/js/jquery.dataTables.min.js"></script>
+      <script src="assets/js/dataTables.bootstrap4.min.js"></script>
+
+      <!-- Datetimepicker JS -->
+      <script src="assets/js/moment.min.js"></script>
+      <script src="assets/js/bootstrap-datetimepicker.min.js"></script>
+
+      <!-- theme JS -->
+      <script src="assets/js/theme-settings.js"></script>
+
+      <!-- Custom JS -->
+      <script src="assets/js/app.js"></script>
+
+      <!-- loading JS -->
+      <script src="assets/js/loading.js"></script>
+
+      <!-- Multi-langs JS -->
+      <script src="multiLangsTable.js"></script>	
+      <script src="assets/js/multi-langs.js"></script>	
+
+      <!--dataTables 1.7.0 -->
+      <script src="assets/js/dataTables.buttons.min.js"></script>
+
+      <!-- jszip 3.1.3-->
+      <script src="assets/js/jszip.min.js"></script>
+      
+      <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>  -->
+      <script src="assets/js/chart3.6.0.js"></script>  
+
+      <!-- HTML5 export buttons for Buttons and DataTables. 2016 SpryMedia Ltd - datatables.net/license
+      FileSaver.js (1.3.3) - MIT license Copyright © 2016 Eli Grey - http://eligrey.com -->
+      <script src="assets/js/buttons.html5.min.js  "></script>
+
+      <script src="functions.js"></script>
+      
+      <!-- Load heading and sidebar script-->
+      <script type="text/javascript">
+        loadPages();
+      </script>
+         
+      <!-- Main Start-->
+      <script type="text/javascript"> 
+        
+        //登入的客戶名稱
+        var 客戶名稱;
+        
+        //客戶使用的設備
+        var 使用身體組成=false; var 使用身高體重BMI=false; var 使用握力器=false;
+
+        //身體組成圖片 index
+        var LLindex=-1; var LTindex=-1; var RTindex=-1; var RRindex=-1;
+        
+        //var today = new Date();
+        
+        var contractSessionHistory={};
+        var courseSettings={};
+        var returnFromAPI=[]; // for test
+        
+        // variables for each page
+        var index_is_loaded = false;
+        var expire_is_loaded = false;
+        var query_sessions_is_load = false;
+
+        var equip_type="hwBMI";
+        var bodyCompositionResult=[];
+        var 身高體重BMI資料={};
+        var 未登錄資料hwBMI={};
+        var 會員資料hwBMI;
+        var 握力資料={};
+        var 未登錄資料Dyno={};
+        var 會員資料dyno;        
+        var newRecNum=0;
+        var updateInterval;
+        var memberResult=[];
+        var hwBMIResult=[]; // result for table
+        var dynoResult=[]; // result for table
+        var expResult=[];
+        var querySessionsResult=[];
+        var chartsInited=false;
+        var chartCenterDate;
+        var timeZoneOffset = new Date().getTimezoneOffset();
+        var UTC_delta = timeZoneOffset/(-60); // +8 in Taiwan    
+        
+        var keyOfMeasurements;      
+        var weekLabelsforChart=[];
+        var weekDataForChart1=[];
+        var weekDataForChart2=[];
+        var weekDataForChart3=[];  
+        var monthLabelsforChart=[];
+        var monthDataForChart1=[];
+        var monthDataForChart2=[];
+        var monthDataForChart3=[];    
+        var allLabelsforChart=[];
+        var allDataForChart1=[];
+        var allDataForChart2=[];
+        var allDataForChart3=[];        
+        var checkInfoHtml="";
+        var 身體組成報告可刪除=false;
+        var 身體組成apiBase="";
+        
+        var bodyCompositionTable;
+        var memberTable;
+        var MeasurementsTable;        
+        
+        var viewer = new ViewBigimg();
+
+        //var wrap = document.getElementById('wrap');
+        var wrap = $("#wrap");
+        wrap[0].onclick = function (e) {
+          console.log(e.target.nodeName)
+          if (e.target.nodeName === 'IMG') {
+            $("#heading").hide();
+            $("#sidebar").hide();          
+            viewer.show(e.target.src);
+          }
+        }        
+        
+        $("#password").focus();
+        
+        function initTables(){
+
+          bodyCompositionTable =$('#身體組成紀錄').DataTable( {
+            dom: 'Bfrtip',
+            buttons: [
+              { "extend": 'csv', "text":'<span id="ml-匯出CSV">匯出 CSV</span>',"className": 'btn-gradient-primary font-weight-bold' },
+              { "extend": 'excel', "text":'<span id="ml-匯出EXCEL">匯出 EXCEL</span>',"className": 'btn-gradient-primary font-weight-bold' }
+
+            ],            
+            order: [[ 0, "desc" ], [ 4, "desc" ] ],
+            select: true,
+            data: bodyCompositionResult,    
+            pageLength: 8,
+            columnDefs: [
+              { targets: -1, 
+                render: function (data, type, row, meta) {  
+                  //console.log("***********", type);
+                  return  (!身體組成報告可刪除)?
+                    `<button id="checkDetails`+data.toString()+`" class="確定登錄按鈕" onClick = "showReport(`+data+`)">`+'查看報告'+`</button>`:
+                    `<button id="checkDetails`+data.toString()+`" class="確定登錄按鈕" onClick = "showReport(`+data+`)">`+'查看'+`</button>
+                    <button id="delReport`+data.toString()+`" class="刪除按鈕" onClick = "delReport(`+data+`)">`+'刪除'+`</button>`;
+                },
+              },                             
+            ]           
+          } );
+
+          memberTable =$('#身高體重BMI會員').DataTable( {
+            dom: 'Bfrtip',
+            buttons: [
+          //                'copyHtml5',
+          //                'excelHtml5',
+          //                'csvHtml5',
+          //                'pdfHtml5'
+          //  { "extend": 'csv', "text":'<span id="ml-匯出CSV">匯出 CSV</span>',"className": 'btn-gradient-primary font-weight-bold' },
+              { "extend": 'excel', "text":'<span id="ml-匯出EXCEL">匯出 EXCEL</span>',"className": 'btn-gradient-primary font-weight-bold' }
+
+            ],            
+            order: [[ 0, "asc" ]],
+            data: memberResult,    
+            pageLength: 8,
+            columnDefs: [
+              { targets: -1, 
+                render: function (data, type, row, meta) {  
+                  return  `<button id="checkDetails`+meta.row.toString()+`" class="確定登錄按鈕" onClick="show_measurements(`+meta.row+`)">`+'查看紀錄'+`</button>`;
+                },
+              },            
+  //            { targets: -2, 
+  //              render: function (data, type, row, meta) { 
+  //                //console.log("bbb", meta);
+  //                return  `<button class="確定登錄按鈕" onClick="alert('尚未完成')">`+'修改資料'+`</button>`;     
+  //                
+  //                // checkbox 留著參考
+  //                //if (data==true) return  '<i class="fa fa-check-square-o" aria-hidden="true"></i><span //style="display:none" >Y</span>';
+  //                //else            return  '<i class="fa fa-times" aria-hidden="true"></i><span //style="display:none">N</span>';
+  //
+  //              },
+  //            },                 
+            ]           
+          } );
+
+          MeasurementsTable =$('#身高體重BM量測記錄表').DataTable( {
+            dom: 'Bfrtip',
+            buttons: [
+              { "extend": 'excel', "text":'<span id="ml-匯出EXCEL">匯出 EXCEL</span>',"className": 'btn-gradient-primary font-weight-bold' }
+
+            ],            
+            order: [[ 0, "desc" ]],
+            data: hwBMIResult,    
+            pageLength: 8,
+            columnDefs: [
+              { targets: -1, 
+                render: function (data, type, row, meta) {  
+                  return  `<button id="checkDetails`+meta.row.toString()+`" class="確定登錄按鈕" onClick="draw_charts(`+meta.row+`)">`+'圖表'+`</button>
+                  
+                  <button id="delReportHwBMIdyno`+meta.row.toString()+`" class="刪除按鈕" onClick = "delReportHwBMIdyno(`+meta.row+`)">`+'刪除'+`</button>`
+                },
+              },                            
+            ]           
+          } );
+
+        }
+        
+        async function delReport(index){
+          //console.log(bodyCompositionResult[index]);
+          var tmp_rep = bodyCompositionResult[index];
+          
+          var delConfirm = prompt("確定要刪除此紀錄?\n\n"+
+                                  "日期: "+tmp_rep[0]+"\n"+
+                                  "姓名: "+tmp_rep[1]+"\n"+
+                                  "電話: "+tmp_rep[2]+"\n"+
+                                  "分數: "+tmp_rep[3]+"\n\n"+
+                                  "刪除後將無法回復，請輸入 電話 確認", ""
+                     )
+          if ( delConfirm == null) {
+            return;
+          } else if ( delConfirm ==tmp_rep[2]){
+            // call api to delete, ex. ?API=40&UserPhone=0955039022&MachineSN=T20002687&MeasureTime=1648791100466
+
+            //測試用，fetch 不能用 localhost，但可以用 ip
+            //apiUrl="http://172.20.10.8:5000?API=40&UserPhone=" + tmp_rep[2] + "&MachineSN=" + tmp_rep[6] + "&MeasureTime="+tmp_rep[7].toString();
+            
+            apiUrl=身體組成apiBase+"?API=40&UserPhone="+tmp_rep[2]+"&MachineSN="+tmp_rep[6]+"&MeasureTime="+tmp_rep[7].toString();
+            
+            console.log(apiUrl);
+            
+//            alert("刪除功能開發中");            
+//            return;
+            
+            //apiUrl = 身體組成apiBase+"";
+            await fetch(apiUrl)
+            .then(function(response) {
+              return(response.text());
+            })
+            .then(function(result) {
+              console.log(apiUrl, result);
+            });  
+                                
+            // 重新讀取資料及更新 table
+            read身體組成資料();
+          } else { 
+            alert("電話輸入不符合");
+          }
+        }
+        
+        function showReport(index){
+          LTindex = index;
+          
+          console.log(index);
+        
+          var prevReports = findPrev2Reports(index);
+          var nextReports = findNext2Reports(index);
+          
+          console.log(prevReports, nextReports);
+                    
+          if(prevReports.prev1.index>-1){
+            $("#LL").attr("src", prevReports.prev1.imgPath);
+            LLindex=prevReports.prev1.index;
+          } else {
+            $("#LL").attr("src", "./noPrev.jpg");            
+          }
+          
+          $("#LT").attr("src", bodyCompositionResult[LTindex][5]);
+          
+          var LTInfoStr = bodyCompositionResult[LTindex][0]+" "+
+                           bodyCompositionResult[LTindex][1]+ //.substr(0,10)+
+                           " <b>健康分數:</b><span style='font-size:28px'>"+
+                           bodyCompositionResult[LTindex][3]+"</span>";
+          $("#LTinfo").html(LTInfoStr);  
+          
+          if(nextReports.next1.index>-1){
+            $("#RT").attr("src", nextReports.next1.imgPath);
+            RTindex = nextReports.next1.index;
+            var RTInfoStr = bodyCompositionResult[nextReports.next1.index][0]+" "+
+                             bodyCompositionResult[nextReports.next1.index][1]+ //.substr(0,10)+
+                             " <b>健康分數:</b><span style='font-size:28px'>"+
+                             bodyCompositionResult[nextReports.next1.index][3]+"</span>";
+            $("#RTinfo").html(RTInfoStr);            
+          } else {
+            $("#RT").attr("src", "./noNext.jpg");
+            $("#RTinfo").html("");  
+          }
+          
+          if(nextReports.next2.index>-1){
+            $("#RR").attr("src", nextReports.next2.imgPath);
+            RRindex = nextReports.next1.index;            
+          } else {
+            $("#RR").attr("src", "./noNext.jpg");
+          }
+                
+          
+        }
+
+        function findPrev2Reports(index){
+          console.log(index);
+          var retuenObj={
+            "prev1": {index:-1, imgPath:""},
+            "prev2": {index:-1, imgPath:""}          
+          };
+          var tmp;
+          var phoneNumber=bodyCompositionResult[index][2];
+          //console.log(phoneNumber);
+          for (var i=index-1; i>-1; i--) {
+            //console.log(bodyCompositionResult[i][2]);
+            if (bodyCompositionResult[i][2]==phoneNumber){
+              retuenObj.prev1.index=i;
+              retuenObj.prev1.imgPath=bodyCompositionResult[i][5];
+              tmp=i-1;
+              break;
+            }
+          }
+          if(tmp>-1) {
+            //console.log(tmp);
+            for (var i=tmp; i>-1; i--) {
+              if (bodyCompositionResult[i][2]==phoneNumber){
+                retuenObj.prev2.index=i;
+                retuenObj.prev2.imgPath=bodyCompositionResult[i][5];
+                break;
+              }
+            } 
+          }
+          return(retuenObj);
+        }
+        
+        function findNext2Reports(index){
+          console.log(index);
+          var retuenObj={
+            "next1": {index:-1, imgPath:""},
+            "next2": {index:-1, imgPath:""}          
+          };
+          var tmp;
+          var phoneNumber=bodyCompositionResult[index][2];
+          //console.log(phoneNumber);
+          for (var i=index+1; i<bodyCompositionResult.length; i++) {
+            //console.log(bodyCompositionResult[i][2]);
+            if (bodyCompositionResult[i][2]==phoneNumber){
+              retuenObj.next1.index=i;
+              retuenObj.next1.imgPath=bodyCompositionResult[i][5];
+              tmp=i+1;
+              break;
+            }
+          }
+          if(tmp<bodyCompositionResult.length) {
+            //console.log(tmp);
+            for (var i=tmp; i<bodyCompositionResult.length; i++) {
+              if (bodyCompositionResult[i][2]==phoneNumber){
+                retuenObj.next2.index=i;
+                retuenObj.next2.imgPath=bodyCompositionResult[i][5];
+                break;
+              }
+            } 
+          }
+          return(retuenObj);
+        }        
+        
+        async function login() {
+          
+          // check if using Chrome
+          var isChromium = window.chrome;
+          var winNav = window.navigator;
+          var vendorName = winNav.vendor;
+          var isOpera = typeof window.opr !== "undefined";
+          var isIEedge = winNav.userAgent.indexOf("Edg") > -1;
+          var isIOSChrome = winNav.userAgent.match("CriOS");
+
+          console.log("check chrome");
+
+          if (isIOSChrome) {
+            condole.log("Chrome in iOS is not support!");
+            alert("抱歉，iOS Chrome 瀏覽器並不支援");
+            return;
+          } else if(
+            isChromium !== null &&
+            typeof isChromium !== "undefined" &&
+            vendorName === "Google Inc." &&
+            isOpera === false &&
+            isIEedge === false
+          ) {
+             console.log("chrome");
+          } else { 
+            // not Google Chrome 
+            console.log("non-chrome");
+            alert("為獲得最佳使用體驗，請使用 Chrome 瀏覽器");
+            return;
+          }
+
+          event.preventDefault();
+          console.log("login:", $("#username").val(),$("#password").val());
+          
+          if ($("#username").val()=='' || $("#password").val()=='') {
+            alert("名字和密碼不得空白");
+            return;
+          }
+          
+          // reset LL/LT/RT/RR
+          $("#LL").attr("src", "./noPrev.jpg");
+          $("#LT").attr("src", "./blank.jpg");
+          $("#LTinfo").text("");
+          $("#RTinfo").text("");            
+          $("#RT").attr("src", "./noNext.jpg");  
+          $("#RR").attr("src", "./noNext.jpg");          
+                
+          // call API for checking username/password
+          $.loading.start('讀取資料');
+          var noMatch=false;
+          var databaseErr = false;
+          var returnObj={};
+          apiUrl = apiUrlBase+"?API=03&SuperKey=mpn6hnClHg&UserId="+$("#username").val()+"&Password="+$("#password").val();
+          console.log(apiUrl);
+          await $.ajax({
+            url: apiUrl,
+            type: "GET",
+            dataType: "text", //必需視傳回值，設定 text 或 json
+            success: function(returnData) {
+              $.loading.end();
+              console.log(returnData);
+              if (returnData.includes("ERROR")) {
+                noMatch=true;
+              } else {
+                returnObj=JSON.parse(returnData);
+                客戶名稱=returnObj.客戶名稱;
+                身體組成apiBase=returnObj.apiBase;
+                if (returnObj.bodyReportDeleteable!=undefined) 身體組成報告可刪除=true;
+                
+                for (var i=0; i<returnObj.使用設備.length; i++){
+                  if (returnObj.使用設備[i].includes("身體組成")) 使用身體組成=true;
+                  if (returnObj.使用設備[i].includes("身高體重")) 使用身高體重BMI=true;
+                  if (returnObj.使用設備[i].includes("握力器"))   使用握力器=true;
+                }
+              }
+            },
+
+            error: function(e) {
+              $.loading.end();
+              alert("登入失敗，請檢查網路!")
+              $("#password").val("");
+              console.log("error", e);
+              databaseErr=true;
+            }
+          });            
+          
+          if (databaseErr) {
+            alert("資料庫讀取錯誤!");
+            return;
+          }
+          
+          if (noMatch) {
+            alert("名字與密碼不符!");
+            return;
+          }          
+              
+          console.log("使用身體組成,使用身高體重BMI,使用握力器:", 使用身體組成, 使用身高體重BMI, 使用握力器);
+          
+          var 使用設備Str= "";
+          使用設備Str = (使用身體組成)?   (使用設備Str+"    身體組成分析儀\n"):使用設備Str;
+          使用設備Str = (使用身高體重BMI)?(使用設備Str+"    身高體重BMI計\n"):使用設備Str;
+          使用設備Str = (使用握力器)?     (使用設備Str+"    握力器\n"):使用設備Str;
+          
+          if (使用身體組成)    $("#ml-身體組成資料").show();
+          if (使用身高體重BMI) {$("#ml-身高體重BMI").show(); read身高體重BMI資料();}
+          if (使用握力器)      {$("#ml-握力資料").show();   readDyno資料();}
+          
+          initTables();
+          
+          alert("歡迎登入 "+客戶名稱+" 查詢系統! \n使用設備有,\n"+使用設備Str+"\n使用後請記得登出");
+          
+          //read身高體重BMI資料();
+          
+          // 先使用 身體組成
+          if (使用身體組成) 
+            顯示身體組成畫面();
+          else if (使用身高體重BMI)
+            顯示身高體重BMI畫面();
+          else if (使用握力器)
+            顯示握力器畫面();
+        }
+        
+        function logout(){
+          location.reload();
+//          客戶名稱="";
+//          show_login_page();
+//          $("#password").focus();
+//          //$("#username").val("");
+//          $("#password").val("");          
+//          $("#ml-登入單位").hide();
+//          $("#ml-登出").hide();          
+//          $("#ml-head_title").text("請登入系統");
+//          客戶名稱="";
+//          使用身體組成=false;    $("#ml-身體組成資料").hide();
+//          使用身高體重BMI=false; $("#ml-身高體重BMI").hide();
+//          使用握力器=false;     $("#ml-握力資料").hide();   
+//          
+//          $("#sidebar").hide(); 
+//          
+//          $("#量測記錄表")[0].innerHTML="";
+//          
+//          clearInterval(updateInterval);
+        }
+        
+        function 顯示身體組成畫面(){
+          $("#sidebar").hide(); 
+          $("#ml-身體組成資料").hide(); 
+          if (使用身高體重BMI) $("#ml-身高體重BMI").show();    
+          if (使用握力器)      $("#ml-握力資料").show();
+          $(".page-wrapper").hide(); // hide all pages with page-wrapper class
+          $("#ml-head_title").text("身體組成報告");
+          $("#ml-登入單位").text(客戶名稱);
+          $("#ml-登入單位").show();
+          $("#ml-登出").show();
+         
+          read身體組成資料();
+          show_body_report_page();
+
+          clearInterval(updateInterval);
+          //設定 timer 固定檢查身體組成是否有新資料
+          updateInterval = setInterval( async function () {
+            //console.log("check new data");
+            newRecNum = await read身體組成資料筆數();
+            console.log(newRecNum);
+
+            if (newRecNum > bodyCompositionResult.length) {
+              $("#更新section").show();
+            }                           
+          }, 6000); // use 60000 as interval for production          
+        }
+          
+        async function 顯示身高體重BMI畫面(){
+          equip_type="hwBMI";
+          
+          if (使用身體組成)    $("#ml-身體組成資料").show();          
+          $("#ml-身高體重BMI").hide()  
+          if (使用握力器) $("#ml-握力資料").show();
+          
+          $("#未登錄資料Title").text("身高體重 BMI 尚未登錄資料");
+          $("#新增修改會員按鈕").show();
+          
+          $(".page-wrapper").hide(); // hide all pages with page-wrapper class
+          $("#ml-head_title").text("身高體重BMI查詢");
+          $("#ml-登入單位").text(客戶名稱);         
+          $("#ml-登入單位").show();
+          $("#ml-登出").show();  
+          
+          $("#sidebar").show();
+          await show_membership_page();
+          
+          $("#檢查是否有新資料").text("檢查是否有新資料");
+          console.log("檢查是否有新資料");
+          await 新增未登錄資料hwBMI();
+          $("#檢查是否有新資料").text("每5秒檢查新資料");
+          clearInterval(updateInterval);          
+          //設定 timer 固定檢查身高體重BMI是否有新資料
+          updateInterval = setInterval( async function () {
+            //console.log("check new data");
+            //newRecNum = await read身高體重BMI資料筆數();
+            //console.log(newRecNum); 
+            $("#檢查是否有新資料").text("檢查是否有新資料");
+            await 新增未登錄資料hwBMI();
+            $("#檢查是否有新資料").text("每5秒檢查新資料");
+            
+          }, 5000);        
+        }
+                
+
+        async function 顯示握力器畫面(){
+          equip_type="dyno";          
+          
+          if (使用身體組成)    $("#ml-身體組成資料").show();          
+          if (使用身高體重BMI) $("#ml-身高體重BMI").show(); 
+          if (使用握力器) $("#ml-握力資料").hide();
+          
+          $("#未登錄資料Title").text("握力量測 尚未登錄資料");
+          $("#新增修改會員按鈕").hide();
+          
+          $(".page-wrapper").hide(); // hide all pages with page-wrapper class
+          $("#ml-head_title").text("握力量測查詢");
+          $("#ml-登入單位").text(客戶名稱);         
+          $("#ml-登入單位").show();
+          $("#ml-登出").show();  
+          
+          $("#sidebar").show();
+          await show_membership_page();
+          
+          $("#檢查是否有新資料").text("檢查是否有新資料");
+          console.log("檢查是否有新資料");
+          await 新增未登錄資料Dyno();
+          $("#檢查是否有新資料").text("每5秒檢查新資料");
+          clearInterval(updateInterval);          
+          //設定 timer 固定檢查握力是否有新資料
+          updateInterval = setInterval( async function () {
+            $("#檢查是否有新資料").text("檢查是否有新資料");
+            await 新增未登錄資料Dyno();
+            $("#檢查是否有新資料").text("每5秒檢查新資料");
+            
+          }, 5000);        
+        }
+                     
+        function dateTimeConv(timestamp){
+          var tmp = new Date(timestamp+8*60*60*1000);
+          var tmpStr= tmp.toISOString();
+          tmpStr=tmpStr.replace('T',' ');
+          tmpStr=tmpStr.replace('Z','');
+          return(tmpStr);
+          
+        }
+
+        //?API=12&Unit=金機興業
+        async function read未登錄資料hwBMI() {
+          apiUrl = apiUrlBase+"?API=12&Unit="+客戶名稱;
+          await fetch(apiUrl)
+          .then(function(response) {
+            return(response.text());
+          })
+          .then(function(result) {
+            未登錄資料hwBMI=JSON.parse(result);
+            //console.log(未登錄資料hwBMI);
+          });  
+          
+          return(未登錄資料hwBMI);
+        }
+                  
+        //?API=15&Unit=金機興業
+        async function read未登錄資料Dyno() {
+          apiUrl = apiUrlBase+"?API=15&Unit="+客戶名稱;
+          await fetch(apiUrl)
+          .then(function(response) {
+            return(response.text());
+          })
+          .then(function(result) {
+            未登錄資料Dyno=JSON.parse(result);
+          });  
+          
+          return(未登錄資料Dyno);
+        }
+                          
+
+        async function 新增未登錄資料hwBMI(){
+          await read未登錄資料hwBMI();
+          //console.log(未登錄資料hwBMI);
+
+          var prependHtml="";
+          //for (unchecked_rec in 未登錄資料hwBMI) {
+          var new_rec_keys = Object.keys(未登錄資料hwBMI);
+          for (var i=new_rec_keys.length-1; i>0; i--) {
+            var new_id    = 未登錄資料hwBMI[new_rec_keys[i]].id;
+
+            if(會員資料hwBMI[new_id]==undefined) {
+              var new_name  = new_id+"不是會員";
+            } else {
+              var new_name  = 會員資料hwBMI[new_id].名字;        
+            }
+
+            var new_weight= 未登錄資料hwBMI[new_rec_keys[i]].net_weight;            
+            var new_height= 未登錄資料hwBMI[new_rec_keys[i]].height;            
+            var new_bmi   = 未登錄資料hwBMI[new_rec_keys[i]].bmi;   
+            var nowStr    = 未登錄資料hwBMI[new_rec_keys[i]].measure_time;   
+            //console.log(new_id, new_name, new_weight, new_height, new_bmi, nowStr);
+
+            var recNoStr= recNo.toString();    
+
+            prependHtml = prependHtml +
+              '<div style="margin-top:10px" id=' + '"rec' + new_rec_keys[i] + '"><button class="確定登錄按鈕' + 
+              '" id="rb' + recNoStr + '" onClick="確定登錄按鈕(\''+ new_rec_keys[i] +'\')" >確定登錄</button>' +
+              '<span style="font-family:Noto Sans TC; font-size:18px; margin-left:0px">' + new_name +
+              '<span style="font-family:Noto Sans Mono; font-size:18px"> '+ nowStr+ ' </span>' + 
+
+              '</span>' + '<br><span style="font-family:Noto Sans Mono; font-size:14px; margin-left:0px">' + 
+              ' 體重:' + new_weight + '公斤, 身高:' + new_height + '公分, BMI:' + new_bmi + ' </span>'+
+              '</div>';    
+
+            recNo++;
+          }
+          //console.log(prependHtml);
+          $("#未登錄記錄表").html(prependHtml);          
+
+        }        
+                  
+        async function 新增未登錄資料Dyno(){
+          console.log("新增未登錄資料Dyno");
+          
+          await read未登錄資料Dyno();
+          //console.log(未登錄資料hwBMI);
+
+          var prependHtml="";
+          //for (unchecked_rec in 未登錄資料hwBMI) {
+          var new_rec_keys = Object.keys(未登錄資料Dyno);
+          for (var i=new_rec_keys.length-1; i>0; i--) {
+            var new_id    = 未登錄資料Dyno[new_rec_keys[i]].id;
+
+            if(會員資料dyno[new_id]==undefined) {
+              var new_name  = new_id+"不是會員";
+            } else {
+              var new_name  = 會員資料dyno[new_id].名字;        
+            }
+
+            var new_leftHandDyno = 未登錄資料Dyno[new_rec_keys[i]].dynoLeftHand;            
+            var new_rightHandDyno= 未登錄資料Dyno[new_rec_keys[i]].dynoRightHand;    
+            
+            var iso_tmp=(new Date(未登錄資料Dyno[new_rec_keys[i]].measure_time+8*60*60*1000)).toISOString();
+            var time_tmp=iso_tmp.replace('T', ' ');             
+            var nowStr           = time_tmp.substr(0,19);   
+
+
+            var recNoStr= recNo.toString();    
+
+            prependHtml = prependHtml +
+              '<div style="margin-top:10px" id=' + '"rec' + new_rec_keys[i] + '"><button class="確定登錄按鈕' + 
+              '" id="rb' + recNoStr + '" onClick="確定登錄按鈕(\''+ new_rec_keys[i] +'\')" >確定登錄</button>' +
+              '<span style="font-family:Noto Sans TC; font-size:18px; margin-left:0px">' + new_name +
+              '<span style="font-family:Noto Sans Mono; font-size:18px"> '+ nowStr+ ' </span>' + 
+
+              '</span>' + '<br><span style="font-family:Noto Sans Mono; font-size:14px; margin-left:0px">' + 
+              ' 左手握力:' + new_leftHandDyno + '公斤, 右手握力:' + new_rightHandDyno + '公斤 </span>'+
+              '</div>';    
+
+            recNo++;
+          }
+          //console.log(prependHtml);
+          $("#未登錄記錄表").html(prependHtml);          
+
+        }        
+                   
+        async function read會員資料hwBMI() {
+          //var 會員資料hwBMI;
+          apiUrl = apiUrlBase+"?API=04&Unit="+客戶名稱;
+          await fetch(apiUrl)
+          .then(function(response) {
+            return(response.text());
+          })
+          .then(function(result) {
+            會員資料hwBMI=JSON.parse(result);
+          });  
+          
+          //return(會員資料hwBMI);
+        }
+        
+       
+        async function read會員資料dyno() {
+          //var 會員資料hwBMI;
+          apiUrl = apiUrlBase+"?API=06&Unit="+客戶名稱;
+          await fetch(apiUrl)
+          .then(function(response) {
+            return(response.text());
+          })
+          .then(function(result) {
+            會員資料dyno=JSON.parse(result);
+          });  
+
+        }        
+                
+        async function read身體組成資料筆數() {
+          var recNum=0;
+          apiUrl = apiUrlBase+"?API=10&Unit="+客戶名稱+"&MeasureType=身體組成";
+          await fetch(apiUrl)
+          .then(function(response) { 
+            return(response.text());
+          })
+          .then(function(result) {
+            recNum=parseInt(result);
+          });  
+          
+          return(recNum);
+        }
+        
+        async function read身高體重BMI資料筆數() { //目前沒用到
+          var recNum=0;
+          apiUrl = apiUrlBase+"?API=10&Unit="+客戶名稱+"&MeasureType=身高體重BMI";
+          await fetch(apiUrl)
+          .then(function(response) { 
+            return(response.text());
+          })
+          .then(function(result) {
+            recNum=parseInt(result);
+          });  
+          
+          return(recNum);
+        }        
+        
+        async function read身體組成資料(){
+
+          $("#有報告總人數").text("");
+          bodyCompositionResult=[];
+          
+          apiUrl = apiUrlBase+"?API=11&Unit="+客戶名稱+"&MeasureType=身體組成";
+          console.log(apiUrl);          
+          var databaseErr=false;
+          var readErr=false;
+          var returnObj={};
+          $.loading.start('讀取資料');
+          await $.ajax({
+            url: apiUrl,
+            type: "GET",
+            dataType: "text",
+            success: function(returnData) {            
+              $.loading.end();
+              if (returnData.includes("ERROR")) {
+                readErr=true;
+              } else {
+                returnObj=JSON.parse(returnData);
+                //console.log(returnObj.length, returnObj[0].量測簡要)
+              }
+                
+              var prevTime="";
+              var prevUser="";
+              for (var i=0; i<returnObj.length; i++) {
+                //var createDate=new Date(returnObj[i].量測簡要.量測時間);
+                
+                //if(returnObj[i].量測簡要.使用者名字==undefined) returnObj[i].量測簡要.使用者名字="無名氏";
+                //無名氏 容易產生負面印象，改為空白。
+                if(returnObj[i].量測簡要.使用者名字==undefined) returnObj[i].量測簡要.使用者名字=" ";
+                
+                var measureTime=dateTimeConv(returnObj[i].量測簡要.量測時間).substr(0,19);
+                var thisUser=returnObj[i].量測簡要.使用者名字;
+                
+                //處理重複的報告
+                if ((measureTime==prevTime) && (thisUser==prevUser)){             
+                  var repeatDateTime= new Date(measureTime);
+                  var repeatTimestamp = repeatDateTime.getTime() +1000;
+                  measureTime = dateTimeConv(repeatTimestamp).substr(0,19);
+                }
+                bodyCompositionResult[i] = [
+                  //dateTimeConv(returnObj[i].量測簡要.量測時間).substr(0,19),
+                  measureTime,
+                  returnObj[i].量測簡要.使用者名字,
+                  returnObj[i].量測簡要.使用者電話,
+                  returnObj[i].量測簡要.HealthScore,
+                  //returnObj[i].量測簡要.量測要求編號,
+                  i,                 
+                  returnObj[i].量測簡要.PicUrl,
+                  returnObj[i].量測簡要.機器序號,
+                  returnObj[i].量測簡要.量測時間,                   
+                ];
+                
+                prevTime = measureTime;
+                prevUser = returnObj[i].量測簡要.使用者名字;
+              }
+              
+              //console.log(bodyCompositionResult);
+              bodyCompositionTable.clear();
+              bodyCompositionTable.rows.add(bodyCompositionResult).draw(); 
+              
+              const distinct = (value, index, self) => { return self.indexOf(value) === index;}
+              
+              //console.log(bodyCompositionResult);
+              var 有報告的人=[];
+              for (var i=0; i<bodyCompositionResult.length;i++) 有報告的人.push(bodyCompositionResult[i][1]); 
+              var 有報告不同名人數=有報告的人.filter(distinct).length;
+              $("#有報告總人數").text("有報告總人數: "+有報告不同名人數.toString()+ "人");
+              
+              //showReport(bodyCompositionResult.length-1);
+               
+            },
+
+            error: function(e) {
+              $.loading.end();
+              console.log("error", e);
+              databaseErr=true;
+            }
+          });                 
+        }          
+
+        async function read身高體重BMI資料(){
+
+          //使用 身高體重BMI資料;          
+          apiUrl = apiUrlBase+"?API=11&Unit="+客戶名稱+"&MeasureType=身高體重BMI";
+          console.log(apiUrl);          
+          var databaseErr=false;
+          var readErr=false;
+          var returnObj={};
+          $.loading.start('讀取資料');
+          await $.ajax({
+            url: apiUrl,
+            type: "GET",
+            dataType: "text",
+            success: function(returnData) {            
+              $.loading.end();
+              if (returnData.includes("ERROR")) {
+                readErr=true;
+              } else {
+                returnObj=JSON.parse(returnData);
+                //console.log(returnObj);
+                
+                var returnObjKeys=Object.keys(returnObj);
+                for (var i=0; i < returnObjKeys.length; i++){
+                  //console.log(i, returnObj[returnObjKeys[i]]);
+                  //console.log(returnObj[returnObjKeys[i]].id, returnObj[returnObjKeys[i]].measure_time );
+                  if (身高體重BMI資料[returnObj[returnObjKeys[i]].id]==undefined) {
+                    身高體重BMI資料[returnObj[returnObjKeys[i]].id]={};
+                  }
+                  
+                  身高體重BMI資料[returnObj[returnObjKeys[i]].id][returnObj[returnObjKeys[i]].measure_time]=returnObj[returnObjKeys[i]];
+                }
+                
+              }
+            },
+
+            error: function(e) {
+              $.loading.end();
+              console.log("error", e);
+              databaseErr=true;
+            }
+          });                 
+        }     
+        
+
+        async function readDyno資料(){
+          //使用 握力資料;          
+          apiUrl = apiUrlBase+"?API=11&Unit="+客戶名稱+"&MeasureType=握力器";
+          console.log(apiUrl);          
+          var databaseErr=false;
+          var readErr=false;
+          var returnObj={};
+          $.loading.start('讀取資料');
+          await $.ajax({
+            url: apiUrl,
+            type: "GET",
+            dataType: "text",
+            success: function(returnData) {            
+              $.loading.end();
+              if (returnData.includes("ERROR")) {
+                readErr=true;
+              } else {
+                returnObj=JSON.parse(returnData);
+                //console.log(returnObj);
+                
+                var returnObjKeys=Object.keys(returnObj);
+                for (var i=0; i < returnObjKeys.length; i++){
+                  //console.log(i, returnObj[returnObjKeys[i]]);
+                  //console.log(returnObj[returnObjKeys[i]].id, returnObj[returnObjKeys[i]].measure_time );
+                  if (握力資料[returnObj[returnObjKeys[i]].id]==undefined) {
+                    握力資料[returnObj[returnObjKeys[i]].id]={};
+                  }
+                  
+                  握力資料[returnObj[returnObjKeys[i]].id][returnObj[returnObjKeys[i]].measure_time]=returnObj[returnObjKeys[i]];
+
+                  握力資料[returnObj[returnObjKeys[i]].id][returnObj[returnObjKeys[i]].measure_time].key=returnObjKeys[i];
+                  
+                  //console.log(typeof returnObj[returnObjKeys[i]].measure_time, returnObj[returnObjKeys[i]].measure_time );
+                  var iso_tmp=(new Date(returnObj[returnObjKeys[i]].measure_time+8*60*60*1000)).toISOString();
+                  var time_tmp=iso_tmp.replace('T', ' ');    
+                  
+                  握力資料[returnObj[returnObjKeys[i]].id][returnObj[returnObjKeys[i]].measure_time].measure_time=time_tmp.substr(0,19);
+                  
+                  
+                                  
+                }
+                
+              }
+            },
+
+            error: function(e) {
+              $.loading.end();
+              console.log("error", e);
+              databaseErr=true;
+            }
+          });                 
+        }     
+                
+        function show_login_page(){
+          $(".page-wrapper").hide(); // hide all pages with page-wrapper class
+          $("#login-page").show();            
+        } 
+        
+        function show_body_report_page(){
+          $(".page-wrapper").hide(); 
+          $("#body-report-page").show(); 
+          $("#ml-身體組成資料").hide();
+        } 
+        
+        function show_add_member_form(){
+          
+          var 客戶ID前綴=localStorage.getItem(客戶名稱);
+          if (客戶ID前綴!=null ) 
+            $("#ID前綴").val(客戶ID前綴);
+          else                  
+            $("#ID前綴").val("000");
+          
+          var maxID=-1;
+          var maxIDstr;
+          for (var i=0; i<Object.keys(memberResult).length; i++){
+            if (memberResult[i][0].substr(0,3)==$("#ID前綴").val()) {
+              
+              if (parseInt(memberResult[i][0].substr(3,7))>maxID){
+                maxID=parseInt(memberResult[i][0].substr(3,7));
+                maxIDstr=memberResult[i][0].substr(3,7);
+              }
+            }
+          }
+          if (maxID==-1)
+            $("#最後ID").text("-------");
+          else 
+            $("#最後ID").text(maxIDstr);       
+          
+          $("#new_member_id").val("");
+          $("#new_member_name").val("");
+          $("#new_member_phone").val("");   
+          
+          $("#add_member_form").show();
+        }
+        
+        function hide_add_member_form(){
+          
+          $("#add_member_form").hide();
+        }
+        
+        async function add_member(){
+          console.log($("#new_member_id").val());
+          console.log($("#new_member_name").val());
+          console.log($("#new_member_phone").val());
+          
+          if ( ($("#new_member_id").val()=="")    ||
+               ($("#new_member_name").val()=="")  ||
+               ($("#new_member_phone").val()=="") 
+          ){
+            alert("ID，名字和電話 不得為空白");
+            return;
+          }
+          
+          for (id in 會員資料hwBMI) {
+            console.log(id);    
+            if (id==$("#new_member_id").val()){
+              if (!confirm("ID: "+id+" 已存在，確定修改?")){
+                return;
+              }
+            }
+          }
+          
+          apiUrl = apiUrlBase+
+                   "?API=05&Unit="+客戶名稱 +
+                   "&UserID="+$("#new_member_id").val() +
+                   "&UserName="+$("#new_member_name").val() +
+                   "&UserPhone="+$("#new_member_phone").val() ;
+          
+          $.loading.start('寫入資料');
+          await fetch(apiUrl)
+          .then(function(response) {
+            return(response.text());
+          })
+          .then(function(result) {
+            console.log(result);
+            if (result.includes("ERROR")){
+              alert("新增/修改會員失敗!");
+            } else {
+              alert("新增/修改會員成功!");              
+            }
+          });  
+          
+          $("#add_member_form").hide();
+          queryMermbers();
+          $.loading.end();
+                           
+        }
+        
+        async function 手動刷新會員(){
+          $.loading.start('刷新資料');
+          await queryMermbers();
+          $.loading.end();
+        }
+        
+        var indexForDisplayingCharts;
+        async function show_measurements(rec_num){ 
+          indexForDisplayingCharts = rec_num;
+          console.log(equip_type);
+          if (equip_type=="hwBMI") {
+            await read身高體重BMI資料();        
+            console.log(rec_num);
+            $("#charts").hide();
+            if (身高體重BMI資料[memberResult[rec_num][0]]==undefined) {
+              alert("此會員沒有量測資料");
+              return;
+            }
+
+            $("#ml-量測紀錄標題").text("ID: "+memberResult[rec_num][0]+", 姓名:"+memberResult[rec_num][1]+" 量測記錄");
+
+            //console.log(memberResult[rec_num][0]);
+
+            var measure_rec = 身高體重BMI資料[memberResult[rec_num][0]];
+
+            hwBMIResult=[];
+            for (rec in measure_rec) {
+              var data=[];
+              data.push([measure_rec[rec].measure_time]);
+              data.push([measure_rec[rec].net_weight]);
+              data.push([measure_rec[rec].height]);
+              data.push([measure_rec[rec].bmi]);
+              data.push([measure_rec[rec].sn]);
+              hwBMIResult.push(data);
+            }
+            MeasurementsTable.clear();
+            MeasurementsTable.rows.add(hwBMIResult).draw();        
+            var col1_title=MeasurementsTable.column(1).header();
+            var col2_title=MeasurementsTable.column(2).header();
+            $(col1_title).html("體重");
+            $(col2_title).html("身高");
+            MeasurementsTable.column(3).visible(true);
+            
+          } else if (equip_type=="dyno") {
+            await readDyno資料();        
+            console.log(rec_num);
+            $("#charts").hide();
+            if (握力資料[memberResult[rec_num][0]]==undefined) {
+              alert("此會員沒有量測資料");
+              return;
+            }
+
+            $("#ml-量測紀錄標題").text("ID: "+memberResult[rec_num][0]+", 姓名:"+memberResult[rec_num][1]+" 量測記錄");
+
+            //console.log(memberResult[rec_num][0]);
+
+            var measure_rec = 握力資料[memberResult[rec_num][0]];
+
+            dynoResult=[];
+            for (rec in measure_rec) {
+//              var iso_tmp=(new Date(parseInt(measure_rec[rec].measure_time)+8*60*60*1000)).toISOString();
+//              var time_tmp=iso_tmp.replace('T', ' ');
+              var data=[];
+              data.push(measure_rec[rec].measure_time);
+              data.push([measure_rec[rec].dynoLeftHand]+" kg");
+              data.push([measure_rec[rec].dynoRightHand]+" kg");
+              data.push([measure_rec[rec].key]);
+              dynoResult.push(data);
+            }
+
+
+            MeasurementsTable.clear();
+            MeasurementsTable.rows.add(dynoResult).draw();  
+            var col1_title=MeasurementsTable.column(1).header();
+            var col2_title=MeasurementsTable.column(2).header();
+            $(col1_title).html("左手握力");
+            $(col2_title).html("右手握力");
+            MeasurementsTable.column(3).visible(false);
+          }
+            
+            
+          show_measurements_page();          
+        }
+
+        function updateReports(){
+          //alert("Update reports from: "+bodyCompositionResult.length.toString()+" to: "+newRecNum.toString());
+
+          //以下測試比較麻煩，需要動到 Firebase realtime DB
+          read身體組成資料();
+          newRecNum = bodyCompositionResult.length;
+
+          $("#更新section").hide();
+        }
+        
+        function prevReport(){
+          var LLimgPath = $("#LL").attr("src");
+          var LTimgPath = $("#LT").attr("src");
+          var RTimgPath = $("#RT").attr("src");
+          var RRimgPath = $("#RR").attr("src");
+          
+          if(LLimgPath=="./noPrev.jpg") {
+            alert("前面已無資料");
+            return;
+          }
+        
+          $("#LL").show();
+          
+          $("#LL").animate({left:200},1000);
+          $("#RT").animate({left:1220},1000);
+          $("#LT").animate({left:720},1000, function() {
+            $("#LT").css('left','200px');
+            $("#RT").css('left','720px');
+            $("#LL").hide();            
+            $("#LL").css('left','-300px')  
+            showReport(LLindex);            
+          });
+        }
+        
+        function nextReport(){ 
+          var LLimgPath = $("#LL").attr("src");
+          var LTimgPath = $("#LT").attr("src");
+          var RTimgPath = $("#RT").attr("src");
+          var RRimgPath = $("#RR").attr("src");
+          
+          if(RRimgPath=="./noNext.jpg") {
+            alert("後面已無資料");
+            return;
+          }
+ 
+          $("#RR").show();
+          
+          $("#RR").animate({left:720},1000);
+          $("#LT").animate({left:-300},1000);
+          $("#RT").animate({left:200},1000, function() {
+            $("#RT").css('left','720px');
+            $("#LT").css('left','200px');
+            $("#RR").hide();            
+            $("#RR").css('left','1220px') 
+            showReport(RTindex);
+          });
+        }
+
+        function show會員資料表(){ // type: 'hwBMI', 'dyno'
+//          $("#hwBMI-measurements-page").hide();
+//          $('#hwBMImembership-page').show();
+//          $('#hwBMI會員資料表').show();
+          
+          var hidePage="#measurements-page";
+          $(hidePage).hide();
+          var showPage="#membership-page";
+          $(showPage).show();
+          var sel_會員資料表 = "#"+equip_type+"會員資料表";
+          $(sel_會員資料表).show();
+        }
+               
+        
+        async function show_membership_page(){
+          $(".page-wrapper").hide(); // hide all pages with page-wrapper class
+          $(".sidebar-item").css("color","white")
+
+          $("#membership-page").show(); 
+          
+          if (equip_type=="hwBMI") {
+            await queryMermbers();
+            if (!index_is_loaded) {
+              await queryMermbers();
+              index_is_loaded = true;     
+            }
+          } else if (equip_type=="dyno"){
+            await queryMermbers();
+            if (!index_is_loaded) {
+              await queryMermbers();
+              index_is_loaded = true;     
+            }            
+          } else {
+            alert("equip_type is wrong");
+          }
+        }        
+
+        function show_measurements_page(){
+          $(".page-wrapper").hide(); // hide all pages with page-wrapper class
+          $(".sidebar-item").css("color","white");
+          
+          $("#dateRangeButtons").hide();
+ 
+          //prepare data
+          
+          $("#measurements-page").show(); 
+
+        } 
+        
+        async function delReportHwBMIdyno(index){
+          console.log(index);
+          
+          if (equip_type=="hwBMI") {
+            console.log(hwBMIResult[index][0][0], hwBMIResult[index][3][0]); 
+            var confirmToDel=prompt("此筆資料將永遠被刪除,\n 請輸入 BMI 數值再度確認");
+            if (confirmToDel==null) return;
+
+            if (confirmToDel==hwBMIResult[index][3][0]){
+              var dateTime = new Date(hwBMIResult[index][0][0]);
+              var dataKey=hwBMIResult[index][4][0]+"_"+(dateTime.getTime(0)+8*60*60*1000).toString();
+              console.log(dataKey);
+              await 刪除一筆量測記錄hwBMIdyno(dataKey);
+
+              身高體重BMI資料={};
+              read身高體重BMI資料();
+              show會員資料表();
+              show_measurements(indexForDisplayingCharts);
+            } else {
+              alert("BMI 輸入值不符合")
+            }
+          }
+          
+          if (equip_type=="dyno") { 
+            console.log(dynoResult[index][3][0]); 
+            var confirmToDel=prompt("此筆資料將永遠被刪除,\n 請輸入 左手握力 數值再度確認");
+            if (confirmToDel==null) return;
+
+            if ((confirmToDel+" kg")==dynoResult[index][1]){
+              await 刪除一筆量測記錄hwBMIdyno(dynoResult[index][3][0]);
+
+              握力資料={};
+              readDyno資料();
+              show會員資料表();
+              show_measurements(indexForDisplayingCharts);
+            } else {
+              alert("左手握力 輸入值不符合")
+            }
+          }          
+          
+        }
+        
+        // API=14/17 刪除一筆量測記錄(hwBMI or dyno)
+        // for test: http://localhost:5000/?API=14&Unit=金機興業&Key=sn_timestamp
+        async function 刪除一筆量測記錄hwBMIdyno(keyStr) {
+          if (equip_type=="hwBMI") {
+            apiUrl = apiUrlBase+"?API=14&Unit="+客戶名稱+"&Key="+keyStr;
+          } 
+          
+          if (equip_type=="dyno") {
+            apiUrl = apiUrlBase+"?API=17&Unit="+客戶名稱+"&Key="+keyStr;
+          }           
+          
+          console.log(apiUrl);
+          await fetch(apiUrl)
+          .then(function(response) {
+            return(response.text());
+          })
+          .then(function(result) {        
+            console.log(result);
+          });  
+        }                                
+        
+        function draw_charts(itemSelect){          
+         
+          $("#週按鈕").css("background-color","#FF4350");
+          $("#月按鈕").css("background-color","lightgray");
+          $("#全部按鈕").css("background-color","lightgray"); 
+          $("#dateRangeButtons").show();          
+          $("#charts").show();  
+          
+          chartRange=0; //display in week
+          
+          var tmpArr=$("#ml-量測紀錄標題").text().split(",");
+          var selectID=tmpArr[0].substr(4);
+          console.log(selectID);
+          
+          if (equip_type=="hwBMI") {
+            所有量測數據=身高體重BMI資料[selectID];
+            chartCenterDate = new Date(hwBMIResult[itemSelect][0][0]).getTime();
+          }
+          
+          if (equip_type=="dyno") {
+            所有量測數據=握力資料[selectID];
+            console.log(chartCenterDate, dynoResult[itemSelect][0], itemSelect);            
+            chartCenterDate = new Date(dynoResult[itemSelect][0]).getTime()
+          }
+          
+          getDataOfAweek(chartCenterDate);
+          
+          if (!chartsInited) {
+            drawChart();
+            chartsInited=true;
+            if (equip_type=="hwBMI"){
+              myChart1.data.datasets[0].label="身高(公分)";              
+              myChart2.data.datasets[0].label="體重(公斤)";              
+              $("#myChart3").show();
+            }
+            
+            if (equip_type=="dyno"){
+              myChart1.data.datasets[0].label="左手握力(公斤)";              
+              myChart2.data.datasets[0].label="右手握力(公斤)";              
+              $("#myChart3").hide();
+            }            
+            
+            myChart1.update();                 
+            myChart2.update();                 
+            myChart3.update();
+            
+          } else {
+            $("#chart_range").text(weekLabelsforChart[0].substr(0,10)+" ~ "+weekLabelsforChart[weekLabelsforChart.length-1].substr(0,10));
+
+            myChart1.data.labels=weekLabelsforChart;
+            myChart2.data.labels=weekLabelsforChart;
+            myChart3.data.labels=weekLabelsforChart;
+
+            myChart1.data.datasets[0].data=weekDataForChart1; 
+            myChart2.data.datasets[0].data=weekDataForChart2; 
+            myChart3.data.datasets[0].data=weekDataForChart3; 
+
+            myChart1.options.scales.x.display=true;
+            myChart2.options.scales.x.display=true;
+            myChart3.options.scales.x.display=true;
+
+            if (equip_type=="hwBMI"){
+              myChart1.data.datasets[0].label="身高(公分)";              
+              myChart2.data.datasets[0].label="體重(公斤)";              
+              $("#myChart3").show();
+            }
+            
+            if (equip_type=="dyno"){
+              myChart1.data.datasets[0].label="左手握力(公斤)";              
+              myChart2.data.datasets[0].label="右手握力(公斤)";              
+              $("#myChart3").hide();
+            }            
+            
+            myChart1.update();                 
+            myChart2.update();                 
+            myChart3.update();                         
+          }
+        }   
+        
+        function getDataOfAweek(reqDate){
+          console.log(reqDate);
+          keyOfMeasurements=Object.keys(所有量測數據);      
+          weekLabelsforChart=[];
+          weekDataForChart1=[];
+          weekDataForChart2=[];
+          weekDataForChart3=[];
+
+          for (var i=-3; i<4; i++) { // 從選擇日前四天到後兩天
+            //selTime = new Date(reqDate - UTC_delta*3600000 + i*86400000);          
+            selTime = new Date(reqDate - 0*3600000 + i*86400000);          
+            matchFullDate= selTime.toISOString().substr(0,10);
+            //console.log(matchFullDate);
+
+            var matched=false;   
+            if (equip_type=="hwBMI") {
+              for (var rec in 所有量測數據) {
+                if (所有量測數據[rec].measure_time.substr(0,10)==matchFullDate){
+                  weekLabelsforChart.push(所有量測數據[rec].measure_time);
+
+                  //當沒有身高資料時，height是 "0"，不是"0cm"
+                  if (所有量測數據[rec].height=="0") {
+                    weekDataForChart1.push(0);
+                  } else {
+                    weekDataForChart1.push(parseFloat(所有量測數據[rec].height.substr(0,所有量測數據[rec].height.length-2)));
+                  }
+                  weekDataForChart2.push(parseFloat(所有量測數據[rec].net_weight.substr(0,所有量測數據[rec].net_weight.length-2)));
+                  weekDataForChart3.push(parseFloat(所有量測數據[rec].bmi));
+                  matched=true;
+                }            
+              }
+            }
+            
+            if (equip_type=="dyno") {
+              for (var rec in 所有量測數據) {
+                if (所有量測數據[rec].measure_time.substr(0,10)==matchFullDate){
+                  weekLabelsforChart.push(所有量測數據[rec].measure_time);
+                  weekDataForChart1.push(parseFloat(所有量測數據[rec].dynoLeftHand));
+                  weekDataForChart2.push(parseFloat(所有量測數據[rec].dynoRightHand));                  
+                  weekDataForChart3.push(parseFloat(所有量測數據[rec].sn));
+                  matched=true;
+                }            
+              }
+            }            
+            
+            
+            if (!matched) {
+              weekLabelsforChart.push(matchFullDate);
+              weekDataForChart1.push(null);          
+              weekDataForChart2.push(null);          
+              weekDataForChart3.push(null);          
+            }
+          }
+
+//          console.log(weekDataForChart1);        
+//          console.log(weekDataForChart2);        
+//          console.log(weekDataForChart3);        
+        }
+
+        function getDataOfAmonth(reqDate){
+          keyOfMeasurements=Object.keys(所有量測數據);
+          monthLabelsforChart=[];
+          monthDataForChart1=[];
+          monthDataForChart2=[];
+          monthDataForChart3=[];     
+
+          for (var i=-15; i<16; i++) { 
+            selTime = new Date(reqDate - UTC_delta*3600000+ i*86400000);
+            //console.log(selTime.toISOString());
+            matchFullDate = selTime.toISOString().substr(0,10);
+            //console.log(matchFullDate);
+
+            var matched=false;   
+            if (equip_type=="hwBMI") {            
+              for (var rec in 所有量測數據) {
+                if (所有量測數據[rec].measure_time.substr(0,10)==matchFullDate){
+
+                  monthLabelsforChart.push(所有量測數據[rec].measure_time);
+
+                  monthDataForChart1.push(parseFloat(所有量測數據[rec].height.substr(0,所有量測數據[rec].height.length-2)));
+                  monthDataForChart2.push(parseFloat(所有量測數據[rec].net_weight.substr(0,所有量測數據[rec].net_weight.length-2)));
+                  monthDataForChart3.push(parseFloat(所有量測數據[rec].bmi));
+                  matched=true;
+                }            
+              }
+            }
+            
+            if (equip_type=="dyno") {
+              for (var rec in 所有量測數據) {
+                if (所有量測數據[rec].measure_time.substr(0,10)==matchFullDate){
+                  monthLabelsforChart.push(所有量測數據[rec].measure_time);
+                  monthDataForChart1.push(parseFloat(所有量測數據[rec].dynoLeftHand));
+                  monthDataForChart2.push(parseFloat(所有量測數據[rec].dynoRightHand));                  
+                  monthDataForChart3.push(parseFloat(所有量測數據[rec].sn));
+                  matched=true;
+                }            
+              }
+            }            
+            if (!matched) {
+              monthLabelsforChart.push(matchFullDate);
+              monthDataForChart1.push(null);          
+              monthDataForChart2.push(null);          
+              monthDataForChart3.push(null);          
+            }
+          }
+
+//          console.log(monthDataForChart1);        
+//          console.log(monthDataForChart2);        
+//          console.log(monthDataForChart3);        
+        }        
+        
+        function getDataOfAll(){
+
+          allLabelsforChart=[];
+          allDataForChart1=[];
+          allDataForChart2=[];
+          allDataForChart3=[];
+
+          if (equip_type=="hwBMI") {
+            for (var rec in 所有量測數據) {
+
+                allLabelsforChart.push(所有量測數據[rec].measure_time);
+
+                allDataForChart1.push(parseFloat(所有量測數據[rec].height.substr(0,所有量測數據[rec].height.length-2)));
+                allDataForChart2.push(parseFloat(所有量測數據[rec].net_weight.substr(0,所有量測數據[rec].net_weight.length-2)));
+                allDataForChart3.push(parseFloat(所有量測數據[rec].bmi));
+
+            }
+          }
+
+          if (equip_type=="dyno") {
+            for (var rec in 所有量測數據) {
+
+                allLabelsforChart.push(所有量測數據[rec].measure_time);
+
+                allDataForChart1.push(parseFloat(所有量測數據[rec].dynoLeftHand));
+                allDataForChart2.push(parseFloat(所有量測數據[rec].dynoRightHand)); 
+                allDataForChart3.push(parseFloat(所有量測數據[rec].sn));
+            }
+          }          
+//          
+//          console.log(allLabelsforChart);        
+//          console.log(allDataForChart1);        
+//          console.log(allDataForChart2);        
+//          console.log(allDataForChart3);        
+        }
+        
+        function drawChart(){          
+          $("#chart_range").text(weekLabelsforChart[0].substr(0,10)+" ~ "+weekLabelsforChart[weekLabelsforChart.length-1].substr(0,10));
+
+          ctx1 = $('#myChart1');
+          myChart1 = new Chart(ctx1, {           
+            type: 'line',
+            data: {
+              //labels: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+              labels: weekLabelsforChart,
+              datasets: [{
+                backgroundColor: [
+                  'rgba(99, 128, 64, 0.9)'
+                ],
+                label: '身高(公分)',
+                cubicInterpolationMode: 'monotone',                
+                data: weekDataForChart1
+              }]
+            },
+            options: {
+              scales: {
+                x: {
+                  display:true,
+                    ticks: {
+                      count:7,
+                      // Include a dollar sign in the ticks
+                      callback: function(value, index, ticks) {
+                        if (chartRange==0) {
+                          if (index==0 || index==3 ||index==6) return weekLabelsforChart[index].substr(5, 5);
+                          else return '';
+                        } 
+                      }
+                    }
+                },
+                y: {
+        //                  ticks: {
+        //                    callback: function(value, index, ticks) {
+        //                        return value+'公分';
+        //                    }
+        //                  }
+                }                
+              }
+            }            
+          });    
+
+          ctx2 = $('#myChart2');
+          myChart2 = new Chart(ctx2, {
+            type: 'line',
+            data: {
+              //labels: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+              labels: weekLabelsforChart,
+              datasets: [{
+                backgroundColor: [
+                  'rgba(255, 99, 132, 0.9)'
+                ],
+                label: '體重(公斤)',
+                cubicInterpolationMode: 'monotone',
+                data: weekDataForChart2
+              }]
+            },
+            options: {
+              scales: {
+                x: {
+                  display:true,
+                    ticks: {
+                      count:7,
+                      callback: function(value, index, ticks) {
+                        if (chartRange==0) {
+                          if (index==0 || index==3 ||index==6) return weekLabelsforChart[index].substr(5, 5);
+                          else return '';
+                        }                      
+                      }
+                    }
+                },
+                y: {           
+                  ticks:{
+        //                  count:10
+        //                    callback: function(value, index, ticks) {
+        //                        return ' '+value;
+        //                    }
+                  }
+                }                
+              }
+            } 
+          });
+
+          ctx3 = $('#myChart3');
+          myChart3 = new Chart(ctx3, {
+            type: 'line',
+            data: {
+              //labels: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+              labels: weekLabelsforChart,
+              datasets: [{
+                backgroundColor: [
+                  'rgba(99, 128, 196, 0.9)'
+                ],
+                label: 'BMI',
+                cubicInterpolationMode: 'monotone',                
+                data: weekDataForChart3
+              }]
+            },
+            options: {
+              scales: {
+                x: {
+                  display:true,
+                    ticks: {
+                      count:7,                    
+                      // Include a dollar sign in the ticks
+                      callback: function(value, index, ticks) {
+                        if (chartRange==0) {
+                          if (index==0 || index==3 ||index==6) return weekLabelsforChart[index].substr(5, 5);
+                          else return '';
+                        } 
+                      }
+                    }
+                },
+                y: {
+                  ticks:{
+        //                  count:10
+        //                    callback: function(value, index, ticks) {
+        //                        return 'x'+value;
+        //                    }
+                  }
+                }                
+              }
+            } 
+          });
+
+        }           
+
+        function displayChartsInWeek(){
+          console.log("Display Charts in week range");
+          chartRange=0;
+          $("#週按鈕").css("background-color","#FF4350");
+          $("#月按鈕").css("background-color","lightgray");
+          $("#全部按鈕").css("background-color","lightgray");   
+
+          $("#left-arrow").css("color","#FF4435");
+          $("#right-arrow").css("color","#FF4435");
+
+          getDataOfAweek(chartCenterDate);
+          $("#chart_range").text(weekLabelsforChart[0].substr(0,10)+" ~ "+weekLabelsforChart[weekLabelsforChart.length-1].substr(0,10));
+
+          myChart1.data.labels=weekLabelsforChart;
+          myChart2.data.labels=weekLabelsforChart;
+          myChart3.data.labels=weekLabelsforChart;
+
+          myChart1.data.datasets[0].data=weekDataForChart1; 
+          myChart2.data.datasets[0].data=weekDataForChart1; 
+          myChart3.data.datasets[0].data=weekDataForChart1; 
+
+          myChart1.options.scales.x.display=true;
+          myChart2.options.scales.x.display=true;
+          myChart3.options.scales.x.display=true;
+
+          myChart1.update();                 
+          myChart2.update();                 
+          myChart3.update();                 
+        }
+        
+        function displayChartsInMonth(){
+        console.log("Display Charts in month range");
+        chartRange=1;
+        $("#週按鈕").css("background-color","lightgray");
+        $("#月按鈕").css("background-color","#FF4350");
+        $("#全部按鈕").css("background-color","lightgray");
+        
+        $("#left-arrow").css("color","#FF4435");
+        $("#right-arrow").css("color","#FF4435");        
+        
+        getDataOfAmonth(chartCenterDate);
+        $("#chart_range").text(monthLabelsforChart[0].substr(0,10)+" ~ "+monthLabelsforChart[monthLabelsforChart.length-1].substr(0,10));
+        myChart1.data.labels=monthLabelsforChart;
+        myChart2.data.labels=monthLabelsforChart;
+        myChart3.data.labels=monthLabelsforChart;
+        
+        myChart1.data.datasets[0].data=monthDataForChart1;
+        myChart2.data.datasets[0].data=monthDataForChart2;
+        myChart3.data.datasets[0].data=monthDataForChart3;
+        
+        myChart1.options.scales.x.display=false;        
+        myChart2.options.scales.x.display=false;        
+        myChart3.options.scales.x.display=false;        
+      
+        myChart1.update();          
+        myChart2.update();          
+        myChart3.update();                 
+      }
+        
+        function displayChartsInAll(){
+          console.log("Display Charts in all");
+          chartRange=3;
+          $("#週按鈕").css("background-color","lightgray");
+          $("#月按鈕").css("background-color","lightgray");
+          $("#全部按鈕").css("background-color","#FF4350");     
+
+          $("#left-arrow").css("color","lightgray");
+          $("#right-arrow").css("color","lightgray");        
+
+          getDataOfAll();
+
+          $("#chart_range").text(allLabelsforChart[0].substr(0,10)+" ~ "+allLabelsforChart[allLabelsforChart.length-1].substr(0,10));        
+
+          myChart1.data.labels=allLabelsforChart;
+          myChart2.data.labels=allLabelsforChart;
+          myChart3.data.labels=allLabelsforChart;
+
+          myChart1.data.datasets[0].data=allDataForChart1;
+          myChart2.data.datasets[0].data=allDataForChart2;
+          myChart3.data.datasets[0].data=allDataForChart3;
+
+          myChart1.options.scales.x.display=false; 
+          myChart2.options.scales.x.display=false; 
+          myChart3.options.scales.x.display=false; 
+
+          myChart1.update();        
+          myChart2.update();        
+          myChart3.update();        
+        } 
+        
+        async function queryMermbers(){          
+          if (equip_type=="hwBMI") {
+            await read會員資料hwBMI();
+            var 會員資料hwBMI_Keys = Object.keys(會員資料hwBMI);
+            memberResult=[];
+            for (var i=0; i< 會員資料hwBMI_Keys.length; i++){
+              //console.log(會員資料hwBMI[會員資料hwBMI_Keys[i]]);
+              memberResult[i]=[
+                會員資料hwBMI[會員資料hwBMI_Keys[i]].Id, 
+                會員資料hwBMI[會員資料hwBMI_Keys[i]].名字, 
+                會員資料hwBMI[會員資料hwBMI_Keys[i]].電話, 
+                "X", '', '', true,];            
+            }  
+          }
+          else if (equip_type=="dyno") {
+            await read會員資料dyno();
+            var 會員資料dyno_Keys = Object.keys(會員資料dyno);
+            memberResult=[];
+            for (var i=0; i< 會員資料dyno_Keys.length; i++){
+              memberResult[i]=[
+                會員資料dyno[會員資料dyno_Keys[i]].Id, 
+                會員資料dyno[會員資料dyno_Keys[i]].名字, 
+                會員資料dyno[會員資料dyno_Keys[i]].電話, 
+                "X", '', '', true,];            
+            }            
+          }
+          else {
+            alert("equip_type is wrong");
+          }
+                  
+          memberTable.clear();
+          memberTable.rows.add(memberResult).draw();
+          
+          return             
+        }     
+        
+        $("#ID前綴").change(function(){
+          var ID前綴=$("#ID前綴").val();
+          //console.log(ID前綴);
+          
+          if(ID前綴[0]=="5") {
+            alert("抱歉，ID前綴 5** 開頭為保留，不能使用");
+            return;
+          }          
+          
+          //將空白改為 "0"
+          var newID前綴="";
+          var incl_space=false;
+          for (var i=0; i<ID前綴.length; i++) {
+            if (ID前綴[i]==" ") {
+              newID前綴+="0"
+              incl_space=true;
+            }
+            else newID前綴+=ID前綴[i];
+          }
+          
+          if (incl_space) alert("ID前綴內 空白 轉成 '0'")
+          //console.log(newID前綴);
+          
+          if (newID前綴.length==0) {
+            alert("ID前綴 空字串，將使用 000");
+            newID前綴="000";
+          } else if (newID前綴.length==1){
+            alert("ID前綴將使用 "+newID前綴+"00");
+            newID前綴=newID前綴+"00";         
+          } else if (newID前綴.length==2){
+            alert("ID前綴將使用 "+newID前綴+"0");
+            newID前綴=newID前綴+"0";           
+          }                              
+          
+          $("#ID前綴").val(newID前綴); 
+          localStorage.setItem(客戶名稱, newID前綴);          
+          
+          var maxID=-1;
+          var maxIDstr;
+          for (var i=0; i<Object.keys(memberResult).length; i++){
+            if (memberResult[i][0].substr(0,3)==newID前綴) {
+              
+              if (parseInt(memberResult[i][0].substr(3,7))>maxID){
+                maxID=parseInt(memberResult[i][0].substr(3,7));
+                maxIDstr=memberResult[i][0].substr(3,7);
+              }
+            }
+          }
+          
+          if (maxID==-1)
+            $("#最後ID").text("-------");
+          else 
+            $("#最後ID").text(maxIDstr);
+          
+        });      
+
+        function ID自動續號(){
+          var lastIDstr=$("#最後ID").text();
+          var nextID=(lastIDstr=="-------")?1:(parseInt(lastIDstr)+1);
+          var nextIDstr = $("#ID前綴").val()+nextID.toString().padStart(7,0);
+          $("#new_member_id").val(nextIDstr);
+        }
+        
+      </script>
+      
+      <script>
+        // demo 用
+        $("#checkDetails0").css("background-color", "rgb(255,67,80)");
+        $("#checkDetails0").css("color", "rgb(255,255,255)");
+      </script>
+             
+    </body>
+</html>
